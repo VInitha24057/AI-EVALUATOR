@@ -1,7 +1,27 @@
 import streamlit as st
-import PyPDF2
 import nltk
+
+# Download NLTK data on first run
+@st.cache_resource
+def download_nltk_data():
+    try:
+        nltk.data.find('tokenizers/punkt')
+    except LookupError:
+        nltk.download('punkt', quiet=True)
+    try:
+        nltk.data.find('tokenizers/punkt_tab')
+    except LookupError:
+        nltk.download('punkt_tab', quiet=True)
+
+download_nltk_data()
+
 from nltk.tokenize import sent_tokenize, word_tokenize
+
+# Try PyPDF2 first, fallback to pypdf
+try:
+    import PyPDF2
+except ImportError:
+    import pypdf as PyPDF2
 
 # ------------------ APP CONFIG ------------------
 st.set_page_config(page_title="Offline Test Paper Evaluator", page_icon="📘")
